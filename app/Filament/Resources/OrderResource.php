@@ -5,10 +5,16 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,7 +29,17 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
-                //
+                TextInput::make('custommer_name')->disabled(),
+                TextInput::make('custommer_wilayas')->disabled(),
+                TextInput::make('custommer_phone')->disabled(),
+                Textarea::make('custommer_address')->disabled(),
+                TextInput::make('total_price')->disabled(),
+                Select::make('status')->label('order status')->options([
+                    'pending' => 'Pending',
+                    'confirmed' => 'Confirmed',
+                    'delivered' => 'Delivered',
+                    'canceled' => 'Canceled'
+                ])->required()
             ]);
     }
 
@@ -31,7 +47,21 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('id')->sortable(),
+                TextColumn::make('custommer_name')->searchable(),
+                TextColumn::make('custommer_phone'),
+                TextColumn::make('total_price')->money('DZD'),
+                TextColumn::make('status')
+                ->label('Status')
+                ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                ->color(fn (string $state): string => match ($state) {
+                    'pending' => 'yellow',
+                    'confirmed' => 'green',
+                    'delivered' => 'blue',
+                    'canceled' => 'red',
+                    default => 'gray',
+                }),
+                TextColumn::make('orderItems.product.name')->label('Ordered Products')->listWithLineBreaks()->sortable(),
             ])
             ->filters([
                 //
@@ -49,7 +79,7 @@ class OrderResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+
         ];
     }
 
