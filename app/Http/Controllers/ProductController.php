@@ -13,7 +13,8 @@ class ProductController extends Controller
             "All products"=> $products
         ]);
     }
-    public function show(Product $product){
+    public function show( $product_id){
+       $product = Product::find($product_id);
         return response()->json([
             "product"=> $product
         ]);

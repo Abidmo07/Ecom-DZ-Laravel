@@ -16,8 +16,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+
 
 class ProductResource extends Resource
 {
@@ -33,7 +32,7 @@ class ProductResource extends Resource
                 Textarea::make('description')->required(),
                 TextInput::make('price')->numeric()->required(),
                 TextInput::make('stock')->numeric()->required(),
-                FileUpload::make('image')->image(),
+                FileUpload::make('image')->image()->directory('products_image')->required(),
                 Select::make('category_id')->relationship('category','name')->required(),
             ]);
     }
@@ -46,7 +45,7 @@ class ProductResource extends Resource
                 TextColumn::make('name')->sortable(),
                 TextColumn::make('price')->sortable(),
                 TextColumn::make('stock')->sortable(),
-                ImageColumn::make('image'),
+                ImageColumn::make('image')->circular(),
                 TextColumn::make('category.name')->label('Category'),
             ])
             ->filters([
