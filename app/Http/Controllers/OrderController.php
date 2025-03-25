@@ -10,6 +10,11 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+
+    public function getAllWilayas(){
+        $wilayas=Wilaya::all();
+        return response()->json($wilayas);
+    }
     public function store(Request $request){
       $orderInfo=$request->validate([
         "custommer_name"=> ["required","string","max:255"],
