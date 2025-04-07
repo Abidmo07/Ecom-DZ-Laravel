@@ -32,6 +32,7 @@ class OrderResource extends Resource
                 TextInput::make('custommer_name')->disabled(),
                 TextInput::make('custommer_wilayas')->disabled(),
                 TextInput::make('custommer_phone')->disabled(),
+                TextInput::make('quantity')->disabled(),
                 Textarea::make('custommer_address')->disabled(),
                 TextInput::make('total_price')->disabled(),
                 Select::make('status')->label('order status')->options([
@@ -50,6 +51,7 @@ class OrderResource extends Resource
                 TextColumn::make('id')->sortable(),
                 TextColumn::make('custommer_name')->searchable(),
                 TextColumn::make('custommer_phone'),
+                TextColumn::make('quantity'),
                 TextColumn::make('total_price')->money('DZD'),
                 TextColumn::make('status')
                 ->label('Status')

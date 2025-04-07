@@ -24,15 +24,16 @@ class OrderController extends Controller
         "status"=>["required","string"],
         "product_id"=>["required","exists:products,id"],
         "quantity"=>["required","integer"],
-        "delivery_price"=> ["required",],
+        "total_price"=> ["required"],
       ]);
+        $order=Order::create($orderInfo);
 
       $product=Product::find($orderInfo["product_id"]);
-      $wilaya=Wilaya::where("name",$orderInfo["custommer_wilayas"])->first();
+    /*   $wilaya=Wilaya::where("name",$orderInfo["custommer_wilayas"])->first();
       $order=Order::create(array_merge($orderInfo,[
         "total_price"=>($product->price*$orderInfo["quantity"])+$wilaya->delivery_price,
         ])
-    );
+    ); */
       $orderItem=OrderItem::create([
       "order_id"=> $order->id,
       "product_id"=>$product->id,
@@ -48,6 +49,25 @@ class OrderController extends Controller
 
 
 
+    }
+
+    public function getSpecificOrder($orderId){
+        $order=Order::find($orderId);
+        $orderItem=OrderItem::find($orderId);
+        $product=Product::find($orderItem->product_id);
+        $product_price=$orderItem->price_at_purchase;
+        $quantity= $orderItem->quantity;
+        $product_price= $product_price*$quantity;
+        $dilevery_price=Wilaya::where("name",$order->custommer_wilayas)->first()->delivery_price;
+
+        return response()->json([
+            "custommer_name"=>$order->custommer_name,
+            "custommer_phone"=>$order->custommer_phone,
+            "product_name"=>$product->name,
+            "product_price"=>$product_price,
+            "dilevery_price"=>$dilevery_price,
+            "total"=>$order->total_price,
+        ]);
     }
 
 }

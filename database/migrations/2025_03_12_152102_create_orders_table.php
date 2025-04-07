@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('custommer_phone');
             $table->string('custommer_address');
             $table->decimal(    'total_price',10,2);
+            $table->integer('quantity');
             $table->enum('status', ['pending','confirmed','delivered','canceled'])->default('pending');
             $table->timestamps();
         });
