@@ -16,7 +16,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-
+use Illuminate\Support\Facades\Auth;
 
 class ProductResource extends Resource
 {
@@ -68,6 +68,7 @@ class ProductResource extends Resource
         ];
     }
 
+
     public static function getPages(): array
     {
         return [
@@ -76,4 +77,6 @@ class ProductResource extends Resource
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }
+
+   
 }

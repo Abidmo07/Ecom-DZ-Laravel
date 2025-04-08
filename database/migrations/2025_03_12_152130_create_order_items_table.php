@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained('orders');
             $table->foreignId('product_id')->constrained('products');
+            $table->foreignId('vendor_id')->constrained('users');
             $table->integer('quantity');
             $table->decimal('price_at_purchase',10,2);//for history work,if the price changes case
             $table->timestamps();

@@ -8,7 +8,7 @@ class OrderItem extends Model
 {
     protected $fillable = [
         "order_id","product_id",
-        "quantity","price_at_purchase"
+        "quantity","price_at_purchase","vendor_id"
     ] ;
    public function order(){
     return $this->belongsTo(Order::class);

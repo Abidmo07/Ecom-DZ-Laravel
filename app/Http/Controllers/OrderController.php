@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\User;
 use App\Models\Wilaya;
+use App\Notifications\NewOrderNotification;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -26,20 +28,23 @@ class OrderController extends Controller
         "quantity"=>["required","integer"],
         "total_price"=> ["required"],
       ]);
+
         $order=Order::create($orderInfo);
 
       $product=Product::find($orderInfo["product_id"]);
-    /*   $wilaya=Wilaya::where("name",$orderInfo["custommer_wilayas"])->first();
-      $order=Order::create(array_merge($orderInfo,[
-        "total_price"=>($product->price*$orderInfo["quantity"])+$wilaya->delivery_price,
-        ])
-    ); */
+      $vendor_id=$product->vendor_id;
+
       $orderItem=OrderItem::create([
       "order_id"=> $order->id,
       "product_id"=>$product->id,
+      "vendor_id"=>$vendor_id,
       "quantity"=>$orderInfo["quantity"],
       "price_at_purchase"=>$product->price
     ]);
+    $vendor=User::find($vendor_id);
+    if($vendor){
+        $vendor->notify(new NewOrderNotification($orderItem));
+    }
 
     return response()->json([
         "message"=>"Order placed successfully!",
