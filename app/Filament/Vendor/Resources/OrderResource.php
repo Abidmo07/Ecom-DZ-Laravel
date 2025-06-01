@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Vendor\Resources;
 
-use App\Filament\Resources\OrderResource\Pages;
-use App\Filament\Resources\OrderResource\RelationManagers;
+use App\Filament\Vendor\Resources\OrderResource\Pages;
+use App\Filament\Vendor\Resources\OrderResource\RelationManagers;
 use App\Models\Order;
-use App\Models\OrderItem;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -13,7 +12,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,7 +27,7 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('custommer_name')->disabled(),
+                 TextInput::make('custommer_name')->disabled(),
                 TextInput::make('custommer_wilayas')->disabled(),
                 TextInput::make('custommer_phone')->disabled(),
                 TextInput::make('quantity')->disabled(),
@@ -48,7 +46,7 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')->sortable(),
+                 TextColumn::make('id')->sortable(),
                 TextColumn::make('custommer_name')->searchable(),
                 TextColumn::make('custommer_phone'),
                 TextColumn::make('quantity'),
@@ -64,7 +62,6 @@ class OrderResource extends Resource
                     default => 'gray',
                 }),
                 TextColumn::make('orderItems.product.name')->label('Ordered Products')->listWithLineBreaks()->sortable(),
-                TextColumn::make('orderItems.vendor.name')->label('vendor')->sortable(),
             ])
             ->filters([
                 //
@@ -82,9 +79,17 @@ class OrderResource extends Resource
     public static function getRelations(): array
     {
         return [
-
+            //
         ];
     }
+
+       public static function getEloquentQuery(): Builder
+{
+    $user=auth()->user();    
+    return parent::getEloquentQuery()->whereHas('orderItems',function(Builder $query) use ($user){
+        $query->where('vendor_id', $user->id);
+    });
+}
 
     public static function getPages(): array
     {

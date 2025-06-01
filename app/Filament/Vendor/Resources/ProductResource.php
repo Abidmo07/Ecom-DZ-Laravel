@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Vendor\Resources;
 
-use App\Filament\Resources\ProductResource\Pages;
-use App\Filament\Resources\ProductResource\RelationManagers;
+use App\Filament\Vendor\Resources\ProductResource\Pages;
+use App\Filament\Vendor\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
@@ -16,7 +16,8 @@ use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProductResource extends Resource
 {
@@ -27,7 +28,7 @@ class ProductResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
+             ->schema([
                 TextInput::make('name')->required(),
                 Textarea::make('description')->required(),
                 TextInput::make('price')->numeric()->required(),
@@ -41,13 +42,13 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')->sortable(),
+                   TextColumn::make('id')->sortable(),
                 TextColumn::make('name')->sortable(),
                 TextColumn::make('price')->sortable(),
                 ImageColumn::make('image')->circular(),
                 TextColumn::make('category.name')->label('Category'),
-                TextColumn::make('vendor_id')->label('vendor ID')->sortable(),
-                TextColumn::make('vendor.name')->label('Vendor')->sortable(),
+                TextColumn::make('vendor_id')->label('vendor ID'),
+                TextColumn::make('vendor.name')->label('Vendor'),
             ])
             ->filters([
                 //
@@ -68,6 +69,11 @@ class ProductResource extends Resource
             //
         ];
     }
+   public static function getEloquentQuery(): Builder
+{
+    $user=auth()->user();    
+    return parent::getEloquentQuery()->where('vendor_id', $user->id);
+}
 
 
     public static function getPages(): array
@@ -78,6 +84,4 @@ class ProductResource extends Resource
             'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }
-
-   
 }

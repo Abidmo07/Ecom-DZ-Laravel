@@ -34,4 +34,7 @@ class Product extends Model
     public function orderItems(){
       return $this->hasMany(OrderItem::class);
     }
+    public function vendor(){
+        return $this->belongsTo(User::class);
+    }
 }
