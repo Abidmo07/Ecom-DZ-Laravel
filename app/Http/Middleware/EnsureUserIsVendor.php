@@ -17,7 +17,8 @@ class EnsureUserIsVendor
     {
         $user=auth()->user();
         if(!$user ||  !$user->hasRole("vendor")){
-            abort(403,"you are not an vendor");
+            auth()->logout();
+            return redirect()->route("filament.vendor.auth.login");
         }
         return $next($request);
     }

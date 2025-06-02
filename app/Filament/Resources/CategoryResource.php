@@ -26,7 +26,7 @@ class CategoryResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')->required(),
-                FileUpload::make('image')->image()->directory('categories_image')
+                FileUpload::make('image')->image()->directory('categories_images')
 
             ]);
     }

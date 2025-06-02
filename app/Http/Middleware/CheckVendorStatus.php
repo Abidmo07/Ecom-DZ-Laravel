@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureUserIsAdmin
+class CheckVendorStatus
 {
     /**
      * Handle an incoming request.
@@ -16,9 +16,11 @@ class EnsureUserIsAdmin
     public function handle(Request $request, Closure $next): Response
     {
         $user=auth()->user();
-        if(!$user ||  !$user->hasRole("admin")){
-            auth()->logout();
-            return redirect()->route("filament.admin.auth.login");
+        if($user && $user->hasRole('vendor') && $user->status=='suspended' ){
+            auth()->logout() ;
+            return redirect()->route('filament.vendor.auth.login');
+            
+
         }
         return $next($request);
     }

@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Vendor\Pages\Auth\Register;
+use App\Http\Middleware\CheckVendorStatus;
 use App\Http\Middleware\EnsureUserIsVendor;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -56,6 +57,7 @@ class VendorPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
                 EnsureUserIsVendor::class,
+                CheckVendorStatus::class,
             ]);
     }
 }
